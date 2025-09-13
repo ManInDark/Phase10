@@ -1,0 +1,94 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  color-scheme: dark light;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+input[type="submit"] {
+  border: 1px solid transparent;
+  border-radius: 0.6em;
+  padding: 0.3em 0.6em;
+  background-color: #1b1b1b;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1b1b1b;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto;
+}
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
+dialog {
+  border-radius: 1em;
+  border-color: #646cff;
+
+  & h4 {
+    margin-block: 0.5em;
+  }
+
+  & input {
+    margin-left: 1em;
+  }
+}
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  th:nth-child(2n + 1) {
+    border-top: 4px white solid;
+    border-left: 4px white solid;
+  }
+
+  th:nth-child(2n) {
+    border-top: 4px white solid;
+  }
+
+  th:last-child {
+    border-top: 0px;
+  }
+}
+
+tbody {
+  tr:not(:last-child) td:nth-child(2n + 1) {
+    border-left: 4px white solid;
+  }
+
+  tr:last-child td:not(:last-child) {
+    border: 4px white solid;
+    border-top: 0px;
+  }
+}
