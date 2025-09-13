@@ -24,7 +24,6 @@ class Player {
   getRounds() { return this.rounds; }
   getRoundResult(i: number) {
     const round: Round = this.rounds[i];
-    console.log(round);
     return (
       <>
         <td key={`RRP-${i}-${this.getUUID()}`}>{round.points}</td>
