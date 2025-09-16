@@ -112,9 +112,9 @@ function App() {
           {!finished &&
             (<tr id="newRow">
               {playerData.map((pd, index) => (
-                <React.Fragment key={pd.getUUID()}>
+                <React.Fragment key={"newRowFragment" + pd.getUUID()}>
                   <td style={{ position: "relative" }}>
-                    {index === dealerIndex && <span style={{ position: "absolute", left: "-15px", top: "50%", transform: "translateY(-50%)" }}>*</span>}
+                    {index === dealerIndex && <>*</>}
                     <input
                       type="number"
                       name={"newRoundPoints-" + pd.getUUID()}
@@ -135,7 +135,7 @@ function App() {
           }
           <tr>
             {playerData.map(pd => (
-              <td colSpan={2}>{pd.getAccumulatedPoints()}</td>
+              <td key={"accumulatedPoints" + pd.getUUID()} colSpan={2}>{pd.getAccumulatedPoints()}</td>
             ))}
             <td></td>
           </tr>
