@@ -1,21 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { getFinished, getRoundsPlayed, Player } from './Datastructures';
+import AddPlayerDialog from './AddPlayerDialog';
 
 function App() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [playerData, setPlayerData] = useState<Player[]>([]);
-  const [newPlayerName, setNewPlayerName] = useState<string>("");
 
   const roundsPlayed: number = getRoundsPlayed(playerData);
   const finished: boolean = getFinished(playerData);
-
-  function addUser() {
-    if (newPlayerName !== "") {
-      setPlayerData([...playerData, new Player(newPlayerName)]);
-      dialogRef.current?.close()
-      setNewPlayerName("");
-    }
-  }
 
   function commitRow() {
     const row = document.querySelector("#newRow") as HTMLTableRowElement;
@@ -39,18 +31,7 @@ function App() {
 
   return (
     <>
-      <dialog ref={dialogRef} className='newPlayerDialog'>
-        <form action={addUser}>
-          <h4>Add Player</h4>
-          <div>
-            <label htmlFor="newPlayerName">Name:</label>
-            <input name="newPlayerName" type="text" value={newPlayerName} onChange={e => setNewPlayerName(e.currentTarget.value)} />
-          </div>
-          <div>
-            <input type="submit" value="Add" />
-          </div>
-        </form>
-      </dialog>
+      <AddPlayerDialog dialogRef={dialogRef} addPlayer={(p: Player) => { setPlayerData([...playerData, p]); }} />
       <div style={{ marginBottom: "1em" }}>
         <button onClick={() => { dialogRef.current?.showModal() }}>New Player</button>
       </div>
