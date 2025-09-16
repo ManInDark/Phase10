@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react'
-import { Player } from './Datastructures';
+import { getFinished, getRoundsPlayed, Player } from './Datastructures';
 
 function App() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [playerData, setPlayerData] = useState<Player[]>([]);
   const [newPlayerName, setNewPlayerName] = useState<string>("");
 
-  const roundsPlayed: number = playerData.reduce((prev: number, curr: Player) => { return Math.min(prev, curr.getRounds().length) }, playerData.length * 25);
-  const finished: boolean = playerData.reduce((prev: number, curr: Player) => { return Math.max(prev, curr.getPhase()) }, 0) > 10;
+  const roundsPlayed: number = getRoundsPlayed(playerData);
+  const finished: boolean = getFinished(playerData);
 
   function addUser() {
     if (newPlayerName !== "") {

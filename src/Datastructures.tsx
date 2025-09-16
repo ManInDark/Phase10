@@ -36,3 +36,10 @@ export class Player {
   getAccumulatedPoints() { return this.rounds.reduce((prev, curr) => prev + curr.points, 0); }
 }
 
+export function getRoundsPlayed(playerData: Player[]): number {
+  return playerData.reduce((prev: number, curr: Player) => { return Math.min(prev, curr.getRounds().length) }, playerData.length * 25)
+}
+
+export function getFinished(playerData: Player[]): boolean {
+  return playerData.reduce((prev: number, curr: Player) => { return Math.max(prev, curr.getPhase()) }, 0) > 10;
+}
