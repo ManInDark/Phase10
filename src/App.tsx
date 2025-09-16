@@ -25,10 +25,10 @@ class Player {
   getRoundResult(i: number) {
     const round: Round = this.rounds[i];
     return (
-      <>
-        <td key={`RRP-${i}-${this.getUUID()}`}>{round.points}</td>
-        <td key={`RRD-${i}-${this.getUUID()}`}><input type="checkbox" checked={round.phaseDone} readOnly={true} /></td>
-      </>
+      <React.Fragment key={`RR-${i}-${this.getUUID()}`}>
+        <td>{round.points}</td>
+        <td><input type="checkbox" checked={round.phaseDone} readOnly={true} /></td>
+      </React.Fragment>
     )
   }
   getPhase() { return 1 + this.rounds.filter(r => r.phaseDone).length }
@@ -43,7 +43,6 @@ function App() {
 
   const roundsPlayed: number = playerData.reduce((prev: number, curr: Player) => { return Math.min(prev, curr.getRounds().length) }, playerData.length * 25);
   const finished: boolean = playerData.reduce((prev: number, curr: Player) => { return Math.max(prev, curr.getPhase()) }, 0) > 10;
-  const dealerIndex: number = playerData.length > 0 ? roundsPlayed % playerData.length : 0;
 
   function addUser() {
     if (newPlayerName !== "") {
@@ -114,7 +113,7 @@ function App() {
               {playerData.map((pd, index) => (
                 <React.Fragment key={"newRowFragment" + pd.getUUID()}>
                   <td style={{ position: "relative" }}>
-                    {index === dealerIndex && <>*</>}
+                    {playerData.length > 0 && index === (roundsPlayed % playerData.length) && <>*</>}
                     <input
                       type="number"
                       name={"newRoundPoints-" + pd.getUUID()}
