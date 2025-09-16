@@ -43,6 +43,7 @@ function App() {
 
   const roundsPlayed: number = playerData.reduce((prev: number, curr: Player) => { return Math.min(prev, curr.getRounds().length) }, playerData.length * 25);
   const finished: boolean = playerData.reduce((prev: number, curr: Player) => { return Math.max(prev, curr.getPhase()) }, 0) > 10;
+  const dealerIndex: number = playerData.length > 0 ? roundsPlayed % playerData.length : 0;
 
   function addUser() {
     if (newPlayerName !== "") {
@@ -110,9 +111,10 @@ function App() {
           ))}
           {!finished &&
             (<tr id="newRow">
-              {playerData.map(pd => (
-                <>
-                  <td>
+              {playerData.map((pd, index) => (
+                <React.Fragment key={pd.getUUID()}>
+                  <td style={{ position: "relative" }}>
+                    {index === dealerIndex && <span style={{ position: "absolute", left: "-15px", top: "50%", transform: "translateY(-50%)" }}>*</span>}
                     <input
                       type="number"
                       name={"newRoundPoints-" + pd.getUUID()}
@@ -126,7 +128,7 @@ function App() {
                       style={{ verticalAlign: "middle" }}
                     />
                   </td>
-                </>
+                </React.Fragment>
               ))}
               <td><input type="submit" value="Commit" onClick={commitRow} /></td>
             </tr>)
