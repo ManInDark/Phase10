@@ -33,7 +33,7 @@ function App() {
     <>
       <AddPlayerDialog dialogRef={dialogRef} addPlayer={(p: Player) => { setPlayerData([...playerData, p]); }} />
       <div style={{ marginBottom: "1em" }}>
-        <button onClick={() => { dialogRef.current?.showModal() }}>New Player</button>
+        {!(roundsPlayed > 0) && <button onClick={() => { dialogRef.current?.showModal() }}>New Player</button>}
       </div>
       {playerData.length > 0 && (<table>
         <thead>
