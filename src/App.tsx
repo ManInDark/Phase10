@@ -1,40 +1,58 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AddPlayerDialog } from './AddPlayerDialog';
 import { getFinished, getRoundsPlayed, Player } from './Datastructures';
 
+function NewRowSinglePlayer(props: { player: Player, shuffleIndicator: boolean, index: number, commitCallbacks: React.RefObject<(() => (() => void) | null)[]> }) {
+  const pointsNodeRef = useRef<HTMLInputElement>(null);
+  const phaseDoneNodeRef = useRef<HTMLInputElement>(null);
+
+  props.commitCallbacks.current[props.index] = () => {
+    const pointsNode = pointsNodeRef.current as HTMLInputElement;
+    const phaseDoneNode = phaseDoneNodeRef.current as HTMLInputElement;
+
+    return pointsNode.value !== "" ? () => {
+      props.player.addRound(parseInt(pointsNode.value), phaseDoneNode.checked);
+      pointsNode.value = "";
+      phaseDoneNode.checked = false;
+    } : null
+  }
+
+  return (
+    <React.Fragment key={"newRowFragment" + props.player.getUUID()}>
+      <td style={{ position: "relative" }}>
+        {props.shuffleIndicator && <>*</>}
+        <input type="number" name={"newRoundPoints-" + props.player.getUUID()} ref={pointsNodeRef} style={{ width: "5ch", textAlign: "right" }} />
+      </td>
+      <td style={{ verticalAlign: "middle", textAlign: "center" }}>
+        <input type="checkbox" name={'newRoundPhaseDone-' + props.player.getUUID()} ref={phaseDoneNodeRef} style={{ verticalAlign: "middle" }} />
+      </td>
+    </React.Fragment>
+  )
+}
+
 function NewRow(props: { playerData: Player[], setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>, roundsPlayed: number }) {
+  const commitCallbacks = useRef<(() => (() => void | null))[]>([]);
   function commitRow() {
-    const row = document.querySelector("#newRow") as HTMLTableRowElement;
-    const allfieldsset = props.playerData.reduce((prev, curr) => {
-      const pointsNode = row.querySelector("[name='newRoundPoints-" + curr.getUUID() + "']") as HTMLInputElement;
-      return prev && pointsNode.value !== ""
-    }, true);
-    if (!allfieldsset) {
+    const returnedCallbacks: (() => void | null)[] = [];
+    commitCallbacks.current.forEach(callback => returnedCallbacks.push(callback()));
+    if (returnedCallbacks.some(callback => callback === null)) {
       alert("not all fields have been set");
       return;
     }
-    props.playerData.forEach((pd) => {
-      const pointsNode = row.querySelector("[name='newRoundPoints-" + pd.getUUID() + "']") as HTMLInputElement;
-      const phaseDoneNode = row.querySelector("[name='newRoundPhaseDone-" + pd.getUUID() + "']") as HTMLInputElement;
-      pd.addRound(parseInt(pointsNode.value), phaseDoneNode.checked);
-      pointsNode.value = "";
-      phaseDoneNode.checked = false;
-    });
+    returnedCallbacks.forEach(callback => callback());
     props.setPlayerData([...props.playerData]);
   }
 
   return (<tr id="newRow">
     {props.playerData.map((pd, index) => {
       return (
-        <React.Fragment key={"newRowFragment" + pd.getUUID()}>
-          <td style={{ position: "relative" }}>
-            {props.playerData.length > 0 && index === (props.roundsPlayed % props.playerData.length) && <>*</>}
-            <input type="number" name={"newRoundPoints-" + pd.getUUID()} style={{ width: "5ch", textAlign: "right" }} />
-          </td>
-          <td style={{ verticalAlign: "middle", textAlign: "center" }}>
-            <input type="checkbox" name={'newRoundPhaseDone-' + pd.getUUID()} style={{ verticalAlign: "middle" }} />
-          </td>
-        </React.Fragment>
+        <NewRowSinglePlayer
+          key={pd.getUUID()}
+          player={pd}
+          shuffleIndicator={props.playerData.length > 0 && index === (props.roundsPlayed % props.playerData.length)}
+          index={index}
+          commitCallbacks={commitCallbacks}
+        />
       )
     })}
     <td><input type="submit" value="Commit" onClick={commitRow} /></td>
