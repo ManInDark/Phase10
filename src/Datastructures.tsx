@@ -33,7 +33,15 @@ export class Player {
   }
   getPhase() { return 1 + this.rounds.filter(r => r.phaseDone).length; }
   getPhaseDisplay() { return Math.min(10, this.getPhase()); }
-  getAccumulatedPoints() { return this.rounds.reduce((prev, curr) => prev + curr.points, 0); }
+  getAccumulatedPoints() { return (<td key={"accumulatedPoints" + this.getUUID()} colSpan={2}>{this.rounds.reduce((prev, curr) => prev + curr.points, 0)}</td>) }
+  getTableHeader() {
+    return (
+      <React.Fragment key={this.getUUID()}>
+        <th>{this.getName()}</th>
+        <th>{this.getPhaseDisplay()}</th>
+      </React.Fragment>
+    )
+  }
 }
 
 export function getRoundsPlayed(playerData: Player[]): number {
