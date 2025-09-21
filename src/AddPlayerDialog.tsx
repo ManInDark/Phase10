@@ -27,9 +27,7 @@ export function AddPlayerDialog(props: { addPlayer: (p: Player) => void }) {
                     </div>
                 </form>
             </dialog>
-            <div style={{ marginBottom: "1em" }}>
-                <button onClick={() => { dialogRef.current?.showModal() }}>New Player</button>
-            </div>
+            <button className="button" onClick={() => { dialogRef.current?.showModal() }}>New Player</button>
         </>
     )
 }
