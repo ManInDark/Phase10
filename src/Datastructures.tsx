@@ -86,18 +86,18 @@ export function getFinished(playerData: Player[]): boolean {
 }
 
 export function variantWidth(variant: GameVariants): number {
-    switch (variant) {
-        case 'Phase10':
-            return 2;
-        case "Standard":
-            return 1;
-    }
+  switch (variant) {
+    case 'Phase10':
+      return 2;
+    case "Standard":
+      return 1;
+  }
 }
 
 export function variantClassWidth(variant: GameVariants): string {
-    switch (variantWidth(variant)) {
-        case 1: return "onespan";
-        case 2: return "twospan";
-        default: return "";
-    }
+  switch (variantWidth(variant)) {
+    case 1: return "onespan";
+    case 2: return "twospan";
+    default: return "";
+  }
 }

@@ -42,7 +42,7 @@ input[type="submit"] {
 }
 
 .button:focus,
-.button:focus-visible{
+.button:focus-visible {
   outline: 4px auto;
 }
 
@@ -81,7 +81,7 @@ thead {
       border-top: 4px white solid;
       border-left: 4px white solid;
     }
-    
+
     th:nth-child(2n) {
       border-top: 4px white solid;
       border-right: 4px white solid;
