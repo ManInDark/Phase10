@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from "react";
-import { VariantContext, type Player } from "./Datastructures";
+import { Phase10Round, Round, VariantContext, type Player } from "./Datastructures";
 
 function NewRowElements(props: { player: Player, shuffleIndicator: boolean, index: number, commitCallbacks: React.RefObject<(() => (() => void) | null)[]> }) {
     const ref0 = useRef<HTMLInputElement>(null);
@@ -13,7 +13,7 @@ function NewRowElements(props: { player: Player, shuffleIndicator: boolean, inde
                 const phaseDoneNode = ref1.current as HTMLInputElement;
 
                 return pointsNode.value !== "" ? () => {
-                    props.player.addRound(parseInt(pointsNode.value), phaseDoneNode.checked);
+                    props.player.addRound(new Phase10Round(parseInt(pointsNode.value), phaseDoneNode.checked));
                     pointsNode.value = "";
                     phaseDoneNode.checked = false;
                 } : null
@@ -27,6 +27,24 @@ function NewRowElements(props: { player: Player, shuffleIndicator: boolean, inde
                     </td>
                     <td style={{ verticalAlign: "middle", textAlign: "center" }}>
                         <input type="checkbox" ref={ref1} style={{ verticalAlign: "middle" }} />
+                    </td>
+                </React.Fragment>
+            )
+        }
+        case "Standard": {
+            props.commitCallbacks.current[props.index] = () => {
+                const pointsNode = ref0.current as HTMLInputElement;
+                return pointsNode.value !== "" ? () => {
+                    props.player.addRound(new Round(parseInt(pointsNode.value)));
+                    pointsNode.value = "";
+                } : null
+            }
+
+            return (
+                <React.Fragment key={"newRowFragment" + props.player.getUUID()}>
+                    <td style={{ position: "relative" }}>
+                        {props.shuffleIndicator && <>*</>}
+                        <input type="number" ref={ref0} style={{ width: "5ch", textAlign: "right" }} />
                     </td>
                 </React.Fragment>
             )

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AddPlayerDialog } from './AddPlayerDialog';
-import { getFinished, getRoundsPlayed, Player, VariantContext } from './Datastructures';
+import { getFinished, getRoundsPlayed, Player, variantClassWidth, VariantContext } from './Datastructures';
 import { DownloadState, UploadState } from './IO';
 import { NewRow } from './NewRow';
 import VariantSelector, { GameVariants } from './Variants';
@@ -21,13 +21,13 @@ export default function App() {
         {roundsPlayed > 0 && <DownloadState playerData={playerData} />}
       </div>
       {playerData.length > 0 && (<table>
-        <thead>
+        <thead className={variantClassWidth(variant)}>
           <tr>
             {playerData.map(pd => (pd.getTableHeader(variant)))}
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className={variantClassWidth(variant)}>
           {Array.from({ length: roundsPlayed }, (_, i) => (
             <tr key={i}>
               {playerData.map(pd => (pd.getRoundResult(variant, i)))}

@@ -69,13 +69,23 @@ table {
 }
 
 thead {
-  th:nth-child(2n + 1) {
-    border-top: 4px white solid;
-    border-left: 4px white solid;
+  &.onespan {
+    th {
+      border-top: 4px white solid;
+      border-left: 4px white solid;
+    }
   }
 
-  th:nth-child(2n) {
-    border-top: 4px white solid;
+  &.twospan {
+    th:nth-child(2n + 1):not(:last-child) {
+      border-top: 4px white solid;
+      border-left: 4px white solid;
+    }
+    
+    th:nth-child(2n) {
+      border-top: 4px white solid;
+      border-right: 4px white solid;
+    }
   }
 
   th:last-child {
@@ -84,8 +94,16 @@ thead {
 }
 
 tbody {
-  tr:not(:last-child) td:nth-child(2n + 1) {
-    border-left: 4px white solid;
+  &.onespan {
+    tr:not(:last-child) td {
+      border-left: 4px white solid;
+    }
+  }
+
+  &.twospan {
+    tr:not(:last-child) td:nth-child(2n + 1) {
+      border-left: 4px white solid;
+    }
   }
 
   tr:last-child td:not(:last-child) {

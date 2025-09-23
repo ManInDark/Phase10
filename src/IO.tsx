@@ -1,9 +1,14 @@
-import { Player } from "./Datastructures";
+import { useContext } from "react";
+import { Phase10Round, Player, Round, VariantContext } from "./Datastructures";
+import type { GameVariants } from "./Variants";
 
 export function DownloadState(props: { playerData: Player[] }) {
+    const variant = useContext(VariantContext);
+    const data = { variant, data: props.playerData };
+
     return <>
         <button className="button" onClick={() => {
-            const blob = new Blob([JSON.stringify(props.playerData, null, 4)], { type: "application/json" });
+            const blob = new Blob([JSON.stringify(data, null, 4)], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
@@ -26,12 +31,20 @@ export function UploadState(props: { onUpload: (data: Player[]) => void }) {
                 if (!file) return;
                 try {
                     file.text().then((rawData) => {
-                        const data = JSON.parse(rawData) as { name: string, rounds: { points: number, phaseDone: boolean }[], uuid: string }[];
+                        const jsonData = JSON.parse(rawData) as { variant: GameVariants, data: { name: string, rounds: Round[], uuid: string }[] };
+                        const data = jsonData.data;
                         const newPlayerData = [];
                         for (const pd of data) {
                             const p = new Player(pd.name);
                             for (const r of pd.rounds) {
-                                p.addRound(r.points, r.phaseDone);
+                                switch (jsonData.variant) {
+                                    case "Phase10":
+                                        p.addRound(new Phase10Round(r.points, (r as Phase10Round).phaseDone));
+                                        break;
+                                    case "Standard":
+                                        p.addRound(new Round(r.points));
+                                        break;
+                                }
                             }
                             newPlayerData.push(p);
                         }
