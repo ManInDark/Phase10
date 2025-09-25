@@ -19,6 +19,10 @@ export function DownloadState(props: { playerData: Player[] }) {
     </>
 }
 
+type UploadStructure = GameVariants extends infer Variants extends string
+    ? { [K in Variants]: { variant: K, data: { name: string, rounds: K extends "Phase10" ? Phase10Round[] : Round[], uuid: string }[] } }[Variants]
+    : never;
+
 export function UploadState(props: { onUpload: (data: Player[]) => void }) {
     return <>
         <input
@@ -31,18 +35,17 @@ export function UploadState(props: { onUpload: (data: Player[]) => void }) {
                 if (!file) return;
                 try {
                     file.text().then((rawData) => {
-                        const jsonData = JSON.parse(rawData) as { variant: GameVariants, data: { name: string, rounds: Round[], uuid: string }[] };
-                        const data = jsonData.data;
+                        const jsonData = JSON.parse(rawData) as UploadStructure;
                         const newPlayerData = [];
-                        for (const pd of data) {
-                            const p = new Player(pd.name);
-                            for (const r of pd.rounds) {
+                        for (const playerIndex in jsonData.data) {
+                            const p = new Player(jsonData.data[playerIndex].name);
+                            for (const roundIndex in jsonData.data[playerIndex].rounds) {
                                 switch (jsonData.variant) {
                                     case "Phase10":
-                                        p.addRound(new Phase10Round(r.points, (r as Phase10Round).phaseDone));
+                                        p.addRound(new Phase10Round(jsonData.data[playerIndex].rounds[roundIndex].points, jsonData.data[playerIndex].rounds[roundIndex].phaseDone));
                                         break;
                                     case "Standard":
-                                        p.addRound(new Round(r.points));
+                                        p.addRound(new Round(jsonData.data[playerIndex].rounds[roundIndex].points));
                                         break;
                                 }
                             }
